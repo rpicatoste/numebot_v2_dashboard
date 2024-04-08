@@ -23,7 +23,7 @@ def get_models_performances(models_df: pd.DataFrame):
     start = time.time()
     perf_dfs = {}
     for model_name, model_data in models_df.iterrows():
-        perf_dfs[model_name] = get_model_performance(model_data, napi)
+        perf_dfs[model_name] = get_model_performance(model_name, model_data, napi)
 
     delay = time.time() - start
     print(f'Time {delay:.3f} sec')
@@ -32,9 +32,12 @@ def get_models_performances(models_df: pd.DataFrame):
 
 
 @st.cache_data(ttl=900) #15 min
-def get_model_performance(model_data: pd.Series, _napi: numerapi.NumerAPI):
-    model_name = model_data.name
-
+def get_model_performance(model_name: str, model_data: pd.Series, _napi: numerapi.NumerAPI):
+    """
+    model_name is contained in model_data, but for the cache to work properly we need to pass it as 
+    a different parameter.
+    """
+    
     model_perf_dict = _napi.round_model_performances(model_name.lower())
     perf_df = pd.DataFrame(model_perf_dict)
 
