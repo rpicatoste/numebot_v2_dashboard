@@ -6,7 +6,13 @@ import streamlit as st
 import time
 
 
+# Load the right loading function and make it available.
 from remote import local_running
+if local_running():
+    from local import load_models_table
+else:
+    from remote import load_models_table
+
 
 interesting_cols = [
     'corr20V2',
@@ -66,39 +72,8 @@ def get_normalized_payout(
     return payout_norm
 
 
-def load_models_table() -> pd.DataFrame:
-    try:
-        from numebot_v2.values import MODELS_TABLE_PATH
-        models_df = pd.read_csv(MODELS_TABLE_PATH, 
-                            index_col='model_name', 
-                            parse_dates=['start', 'end'])
-
-        # Function to lookup the val_sharpe value of the parent model
-        def lookup_parent_sharpe(row, col):
-            if row['parent'] is not None and not pd.isna(row['parent']):
-                parent_sharpe = models_df.loc[models_df.index == row['parent'], col].values[0]
-                return parent_sharpe
-            else:
-                return row[col]
-
-        # Apply the function to correct the val_sharpe column.
-        cols = ['val_sharpe', 'val_max_drawdown', 'val_corr_mean', 'val_corr_std', 'val_mmc_mean', 'val_mmc_std', ]
-        for col in cols:
-            models_df[col] = models_df.apply(lambda row: lookup_parent_sharpe(row, col), axis=1)
-
-    except:
-        print('Loading numebot failed!')
-        from remote import load_fake_dataframe
-        models_df = load_fake_dataframe()
-
-    return models_df
-
-
 def process_models_performances(models_df: pd.DataFrame, perf_dfs: Dict[str, pd.DataFrame]):
-    
-    if not local_running():
-        return models_df
-    
+
     # Put calculated cols first
     new_cols = [
         'n_res',
@@ -149,5 +124,7 @@ def process_models_performances(models_df: pd.DataFrame, perf_dfs: Dict[str, pd.
 
 
     models_df['n_res'] = models_df['n_res'].astype(int)
+
+    ordered_cols = [col for col in ordered_cols if col in models_df.columns]
 
     return models_df[ordered_cols].copy()
