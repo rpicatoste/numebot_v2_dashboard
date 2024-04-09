@@ -32,7 +32,7 @@ def plot_model_performances(perf_dfs: Dict[str, pd.DataFrame]):
             go.Scatter(
                 x=model_df[date_col],
                 y=model_df[plot_col],
-                mode='lines',
+                mode='lines+markers',
                 name=f'{model_name}',
                 line=dict(color=model_color_map[model_name])
             ),
