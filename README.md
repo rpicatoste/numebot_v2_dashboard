@@ -1,3 +1,3 @@
 # Readme
 
-My numer.ai dashboard, hosted at: https://rpica-dashboard.streamlit.app/
+My [Numerai](https://www.numer.ai) dashboard, hosted at: https://rpica-dashboard.streamlit.app/
