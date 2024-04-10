@@ -12,7 +12,9 @@ st.write("""
 Models and performances
 """)
 
-models_df = load_models_table()
+show_benchmarks = st.checkbox("Show benchmark models", value=False)
+
+models_df = load_models_table(add_benchmark_models=show_benchmarks)
 perf_dfs = get_models_performances(models_df)
 
 # Calculate performances

@@ -3,7 +3,7 @@ import pandas as pd
 from numebot_v2.values import MODELS_TABLE_PATH
 
 
-def load_models_table() -> pd.DataFrame:
+def load_models_table_local() -> pd.DataFrame:
     models_df = pd.read_csv(MODELS_TABLE_PATH, 
                         index_col='model_name', 
                         parse_dates=['start', 'end'])

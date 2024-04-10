@@ -9,9 +9,9 @@ import time
 # Load the right loading function and make it available.
 from remote import local_running
 if local_running():
-    from local import load_models_table
+    from local import load_models_table_local as origin_table_load
 else:
-    from remote import load_models_table
+    from remote import load_models_table_remote as origin_table_load
 
 
 interesting_cols = [
@@ -21,6 +21,24 @@ interesting_cols = [
     'payout_norm', 'payout', 'selectedStakeValue', 'roundPayoutFactor',
     'roundOpenTime', 'roundResolveTime', 'roundResolved',
 ]
+
+def load_models_table(add_benchmark_models: bool=False):
+    models_df = origin_table_load()
+
+    benchmark_models = [
+        'v4_lgbm_tyler20',
+        'v42_teager_ensemble',
+        'v4_lgbm_victor20',
+        'v4_lgbm_ralph20',
+        'v43_lgbm_teager60',
+        'v43_lgbm_teager20',        
+    ]
+    if add_benchmark_models:
+        for model in benchmark_models:
+            models_df.loc[model, 'start'] = models_df['start'].min()
+    
+    return models_df
+
 
 def get_models_performances(models_df: pd.DataFrame):
 

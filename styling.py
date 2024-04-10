@@ -12,10 +12,17 @@ def style_models_table_for_showing(models_df: pd.DataFrame):
         'res_corr_mean', 'res_mmc_mean', 
         'res_corr_std', 'res_mmc_std',
     ]
+    num_cols = ['unres_payout_norm_mean',
+                'unres_payout_norm_std',
+                'res_payout_norm_mean',
+                'res_payout_norm_std',
+                ]
 
+    # Make sure the cols are in the df.
     show_cols = [col for col in models_df.columns if col not in hide_cols]
     colored_cols = [col for col in colored_cols if col in show_cols]
     reversed_color_cols = [col for col in reversed_color_cols if col in show_cols]
+    num_cols = [col for col in num_cols if col in show_cols]
 
     # Rename cols
     renaming = {
@@ -32,6 +39,7 @@ def style_models_table_for_showing(models_df: pd.DataFrame):
     cmap = 'YlGn' # 'RdYlBu_r'
     styled_df = models_df[show_cols].style\
                     .background_gradient(cmap=cmap, subset=colored_cols)\
-                    .background_gradient(cmap=cmap+'_r', subset=reversed_color_cols)
+                    .background_gradient(cmap=cmap+'_r', subset=reversed_color_cols)\
+                    .format({renaming[col]: "{:.4f}" for col in num_cols})
 
     return styled_df

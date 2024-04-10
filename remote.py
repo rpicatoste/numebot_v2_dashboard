@@ -2,7 +2,7 @@ from functools import lru_cache
 import pandas as pd
 
 
-def load_models_table() -> pd.DataFrame:
+def load_models_table_remote() -> pd.DataFrame:
 
     print('Working with public data only: No local models_table.csv.')
     model_names = pd.Series([f'RPICA_{n+1}' for n in range(10)], name='model_name')
