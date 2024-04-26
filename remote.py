@@ -5,7 +5,7 @@ import pandas as pd
 def load_models_table_remote() -> pd.DataFrame:
 
     print('Working with public data only: No local models_table.csv.')
-    model_names = pd.Series([f'RPICA_{n+1}' for n in range(11)], name='model_name')
+    model_names = pd.Series([f'RPICA_{n+1}' for n in range(12)], name='model_name')
     models_df = pd.DataFrame(index=model_names)
     models_df['start'] = pd.to_datetime('2024-03-01')
 
